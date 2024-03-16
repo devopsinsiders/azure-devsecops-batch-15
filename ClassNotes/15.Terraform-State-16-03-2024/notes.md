@@ -1,4 +1,4 @@
-# 📝 Class Notes: Understanding Terraform State Files 
+# 📝 Class Notes: Understanding Terraform State Files and Azure Resource Groups
 
 ## Terraform State Files
 - Terraform uses state files to keep track of managed resources.
@@ -14,8 +14,8 @@
    - Terraform detects the changes and plans an update to the existing resource group.
 
 3. **Deleting a Resource Group:**
-   - Use the `terraform destroy` command to remove the `azurerm_resource_group` resource.
-   - Terraform updates the state file to reflect the deletion.
+   - To delete a resource group, remove the `azurerm_resource_group` resource from your `main.tf` file.
+   - Terraform will recognize the removal and plan to delete the resource group.
 
 4. **State File Management:**
    - Store the state file remotely in a secure location, such as Azure Storage or Terraform Cloud.
@@ -29,7 +29,5 @@
    - Use the `terraform state` command to inspect the contents of the state file.
    - This can help troubleshoot issues and understand the current state of managed resources.
 
-## Best Practices
-- Store the state file remotely and enable locking to prevent conflicts.
-- Use Terraform modules to encapsulate resource configurations and promote reusability.
-- Use variables and outputs to make your configurations more flexible and maintainable.
+## Note
+- Nadi kinare saanp hai terraform destroy chalana paap hai (Translation: There's a snake by the riverbank, running `terraform destroy` is a sin.)
