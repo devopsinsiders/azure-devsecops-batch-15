@@ -7,13 +7,13 @@
 ## Example Usage
 ```hcl
 variable "rg_list" {
-  default = ["rg1": "East US", "rg2": "West Europe"]
+  default = ["rg1", "rg2"]
 }
 
 resource "azurerm_resource_group" "rg" {
   for_each = toset(var.rg_list)
   name     = each.key
-  location = each.value
+  location = "East US"
 }
 ```
 
@@ -21,7 +21,7 @@ resource "azurerm_resource_group" "rg" {
 - The `rg_list` variable contains a list of maps with the resource group name as key and location as value.
 - `toset()` function converts the list to a set, ensuring uniqueness.
 - The `for_each` argument iterates over the set, creating a resource group for each element.
-- `each.key` and `each.value` refer to the current key-value pair in the iteration.
+- `each.key` ` refer to the current key-value pair in the iteration.
 
 ## Conclusion
 - Using `for_each` with lists allows dynamic creation of resources based on the elements.
