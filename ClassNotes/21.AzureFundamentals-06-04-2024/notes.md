@@ -1,87 +1,48 @@
-# Three-Tier Architecture with Terraform
+**Azure Resource Management Group (RG):**
 
-## Introduction
-- The three-tier architecture is a popular model for designing applications, consisting of presentation, application (logic), and data tiers.
-- Each tier serves a specific function, offering modularity, scalability, and ease of maintenance.
+- **Definition:** An Azure Resource Management Group is a logical container that holds related resources for an Azure solution. It helps in organizing resources, managing permissions, and applying policies across multiple resources.
+- **Purpose:** It provides a way to manage and organize resources deployed in Azure, making it easier to manage and govern the resources as a single entity.
+- **Key Features:**
+  - **Resource Organization:** Resources can be grouped together based on their functionality, environment, or any other criteria.
+  - **Access Control:** Permissions can be applied at the resource group level, making it easier to manage access for users and applications.
+  - **Policy Application:** Azure Policies can be applied at the resource group level to enforce compliance and governance standards across all resources within the group.
 
-## Resource Group
-- In Azure, a resource group is a logical container used to manage and organize Azure resources.
-- It helps in the management, monitoring, and access control of related resources.
-- Terraform provides capabilities to create and manage resource groups efficiently.
+**Azure Virtual Network (VNet):**
 
-### Example Code
-```hcl
-resource "azurerm_resource_group" "my_resource_group" {
-  name     = "my-resource-group"
-  location = "westus2"
-}
-```
+- **Definition:** Azure Virtual Network (VNet) is a logically isolated network in Azure that enables Azure resources to communicate securely with each other, the internet, and on-premises networks.
+- **Purpose:** VNets allow you to create private networks in the cloud, enabling you to define your own IP address space, subnets, route tables, and network security policies.
+- **Key Features:**
+  - **Isolation:** VNets provide network isolation for your Azure resources, ensuring that traffic stays within the defined network boundaries.
+  - **Connectivity:** VNets support various connectivity options, including VPN gateways, ExpressRoute connections, and peering with other VNets.
+  - **Security:** Network security groups (NSGs) can be applied to control inbound and outbound traffic to and from resources within the VNet.
 
-### Explanation
-- This code snippet creates an Azure resource group named "my-resource-group" in the West US 2 region.
-- The `azurerm_resource_group` resource type is used to define the resource group.
-- `name` specifies the name of the resource group, and `location` specifies the Azure region where the resource group will be located.
+**Subnet:**
 
-## Virtual Network (VNet) and Subnet
-- Virtual networks (VNets) in Azure allow you to securely connect Azure resources, such as virtual machines (VMs), and extend your on-premises network to the cloud.
-- Subnets are subdivisions of VNets, used to organize and secure network traffic.
+- **Definition:** A subnet is a range of IP addresses in a VNet. It is used to segment the VNet into smaller networks for organization and security purposes.
+- **Purpose:** Subnets enable you to divide a VNet into multiple smaller networks, each serving a specific purpose or workload.
+- **Key Features:**
+  - **Segmentation:** Subnets allow you to segment resources within a VNet, providing isolation and control over traffic flow.
+  - **Gateway Deployment:** Subnets are often used to deploy Azure services such as VPN gateways and Azure Firewall.
 
-### Example Code
-```hcl
-resource "azurerm_virtual_network" "my_vnet" {
-  name                = "my-vnet"
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.my_resource_group.location
-  resource_group_name = azurerm_resource_group.my_resource_group.name
-}
+**Network Security Group (NSG):**
 
-resource "azurerm_subnet" "my_subnet" {
-  name                 = "my-subnet"
-  resource_group_name  = azurerm_resource_group.my_resource_group.name
-  virtual_network_name = azurerm_virtual_network.my_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
-```
+- **Definition:** A Network Security Group (NSG) is a security feature in Azure that acts as a virtual firewall for controlling inbound and outbound traffic to Azure resources.
+- **Purpose:** NSGs provide an additional layer of security by filtering traffic based on source and destination IP addresses, port, and protocol.
+- **Key Features:**
+  - **Traffic Control:** NSGs allow you to define inbound and outbound security rules to permit or deny traffic to and from Azure resources.
+  - **Application:** NSGs can be associated with subnets, network interfaces, or individual VMs to control traffic at different levels of the network hierarchy.
 
-### Explanation
-- The first resource block creates a VNet named "my-vnet" with an address space of 10.0.0.0/16.
-- The second resource block creates a subnet named "my-subnet" within the VNet, with an address prefix of 10.0.1.0/24.
-- Both resources are associated with the previously created resource group.
+**Virtual Machine (VM):**
 
-## Virtual Machine (VM)
-- Virtual machines are compute resources that enable you to run applications on virtualized hardware.
+- **Definition:** A Virtual Machine (VM) is a virtualized computing instance in the cloud that behaves like a physical computer, running an operating system and applications.
+- **Purpose:** VMs enable you to deploy and manage applications in the cloud without the need to manage physical hardware.
+- **Key Features:**
+  - **Flexibility:** VMs allow you to choose the size, operating system, and software configurations that best suit your application requirements.
+  - **Scalability:** Azure VMs can be easily scaled up or down to meet changing demand, ensuring optimal performance and cost efficiency.
+  - **Integration:** VMs can be integrated with other Azure services such as Azure Virtual Network, Azure Storage, and Azure Active Directory to build comprehensive cloud solutions.
 
-### Example Code
-```hcl
-resource "azurerm_windows_virtual_machine" "my_vm" {
-  name                  = "my-vm"
-  resource_group_name   = azurerm_resource_group.my_resource_group.name
-  location              = azurerm_resource_group.my_resource_group.location
-  size                  = "Standard_DS1_v2"
-  admin_username        = "adminuser"
-  admin_password        = "Password1234!"
-  network_interface_ids = [azurerm_network_interface.my_nic.id]
+**Notes:**
 
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2019-Datacenter"
-    version   = "latest"
-  }
-
-  computer_name = "my-vm"
-}
-```
-
-### Explanation
-- This code snippet creates a Windows virtual machine named "my-vm" in the previously defined resource group.
-- It specifies the VM's size, administrator credentials, networking configuration, OS disk settings, and the source image for the VM.
-- The VM is associated with a network interface defined elsewhere (`azurerm_network_interface.my_nic`).
-
-## Result
-- With the provided Terraform configuration, you can deploy a three-tier architecture on Azure, including a resource group, virtual network with subnet, and a virtual machine, enabling the deployment of scalable and modular applications.
+- When deploying resources in Azure, it's important to consider the overall architecture and how different components like management groups, resource groups, VNets, subnets, NSGs, and VMs interact with each other to build a secure and scalable solution.
+- Proper planning and configuration of these components are essential for optimizing performance, managing costs, and ensuring compliance with security and governance requirements.
+- Azure provides various tools and services to help manage and monitor these resources effectively, including Azure Portal, Azure CLI, Azure PowerShell, Azure Resource Manager templates, and Azure Monitor.
