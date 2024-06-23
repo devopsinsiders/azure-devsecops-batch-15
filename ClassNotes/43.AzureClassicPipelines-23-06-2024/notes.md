@@ -1,5 +1,7 @@
 # Class Notes: Creating a Classic Pipeline with Terraform Extension in Azure DevOps
 
+![alt text](image.png)
+
 ## Overview
 This guide will walk you through the process of creating a classic pipeline in Azure DevOps using the Terraform extension. We will cover setting up the necessary service connections, creating and configuring the pipeline, and executing a Terraform deployment.
 
@@ -84,3 +86,4 @@ This guide will walk you through the process of creating a classic pipeline in A
 
 ## Conclusion
 By following these steps, you have created a classic pipeline in Azure DevOps that uses the Terraform extension to automate infrastructure deployments. This pipeline can be customized further to suit your specific needs, such as adding approval gates, notifications, or additional tasks.
+
