@@ -1,0 +1,61 @@
+pool: Default
+
+trigger: none
+
+stages:
+- stage: terraforminitandplan
+  displayName: Terraform Init And Plan
+  pool: Default
+  jobs: 
+  - job: terraforminitplan
+    steps: 
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+        backendServiceArm: 'Ratan-SC'
+        backendAzureRmResourceGroupName: 'pkrg'
+        backendAzureRmStorageAccountName: 'mystorage12345126'
+        backendAzureRmContainerName: 'pkcontainer'
+        backendAzureRmKey: 'bhondhu.tfstate'
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+        environmentServiceNameAzureRM: 'Ratan-SC'
+
+- stage: terraformapply
+  dependsOn: terraforminitandplan
+  displayName: Terraform Apply
+  jobs: 
+  - job: ManualApproval
+    displayName: Manual Approval
+    pool: server 
+    steps: 
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'abc@abc.com'
+        instructions: 'Bhai pichli stage me plan check karle.'
+  - job: TerraformApply
+    dependsOn: ManualApproval
+    displayName: Terraform Apply
+    steps: 
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+        backendServiceArm: 'Ratan-SC'
+        backendAzureRmResourceGroupName: 'pkrg'
+        backendAzureRmStorageAccountName: 'mystorage12345126'
+        backendAzureRmContainerName: 'pkcontainer'
+        backendAzureRmKey: 'bhondhu.tfstate'
+      
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+        environmentServiceNameAzureRM: 'Ratan-SC'

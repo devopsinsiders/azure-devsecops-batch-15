@@ -1,0 +1,62 @@
+name: MeriPyariPipeline
+pool: Default
+
+trigger: 
+- master
+- develop
+
+jobs: 
+- job: Job1
+  displayName: "TerraformInitPlan"
+  steps: 
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+      backendServiceArm: 'Ratan-SC'
+      backendAzureRmResourceGroupName: 'pkrg'
+      backendAzureRmStorageAccountName: 'mystorage12345126'
+      backendAzureRmContainerName: 'pkcontainer'
+      backendAzureRmKey: 'dhondhu007.tfstate'
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+      environmentServiceNameAzureRM: 'Ratan-SC'
+      
+
+- job: ManualApprovalJob
+  dependsOn: Job1
+  pool: server
+  steps:
+  - task: ManualValidation@1
+    inputs:
+      notifyUsers: 'abc@abc.com'
+      instructions: 'bhai terraform plan dekh le... nahi to infra fatt jaega..'
+
+- job: Job2
+  dependsOn: ManualApprovalJob
+  displayName: "TerraformApply"
+  pool: Default
+  steps: 
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+      backendServiceArm: 'Ratan-SC'
+      backendAzureRmResourceGroupName: 'pkrg'
+      backendAzureRmStorageAccountName: 'mystorage12345126'
+      backendAzureRmContainerName: 'pkcontainer'
+      backendAzureRmKey: 'dhondhu007.tfstate'  
+  - task: TerraformTaskV4@4
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/environments/dev'
+      environmentServiceNameAzureRM: 'Ratan-SC'
