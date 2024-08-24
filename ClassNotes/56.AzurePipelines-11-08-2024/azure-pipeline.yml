@@ -1,0 +1,57 @@
+trigger: none
+
+pool: Default
+
+variables:
+  work_dir: $(System.DefaultWorkingDirectory)
+
+stages:
+- stage: BuildStage
+  displayName: Build Stage
+  jobs:
+  - job: BuildJob
+    steps:
+    - task: NodeTool@0
+      displayName: Node Install hoja
+      inputs:
+        versionSource: 'spec'
+        versionSpec: '16.x'
+    
+    - task: Npm@1
+      displayName: npm install hoja
+      inputs:
+        command: 'install'
+        workingDir: '$(work_dir)'
+
+    - task: Npm@1
+      displayName: npm build hoja
+      inputs:
+        command: 'custom'
+        workingDir: '$(work_dir)'
+        customCommand: 'run build'
+    
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'ls'
+    
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Vikram-Subcription'
+        scriptType: 'ps'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az storage blob directory upload -c dhondhu --account-name stgvikram -s "$(System.DefaultWorkingDirectory)/build" -d directory --recursive'
+
+- stage: ReleaseStage
+  displayName: Release Stage
+  jobs: 
+  - job: DeployJob
+    displayName: Deploy karne wala job
+    steps: 
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Vikram-Subcription'
+        scriptType: 'ps'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az storage blob directory download -c dhondhu --account-name stgvikram -s "directory/build" -d "$(System.DefaultWorkingDirectory)/release" --recursive'
+    
