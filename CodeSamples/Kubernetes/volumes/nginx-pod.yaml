@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: nginx-pod
+  namespace: default
+spec: 
+  volumes:
+  - name: dhondhu-vol
+    persistantVolumeClaim: 
+  containers:
+  - image: nginx
+    name: nginx-container
+    ports: 
+    - containerPort: 80
+    volumeMounts:
+    - name: dhondhu-vol
+      mountPath: /usr/share/nginx/html
+  - image: tomcat
+    name: ram-container
+    ports: 
+    - containerPort: 8080 
+    volumeMounts:
+    - name: dhondhu-vol
+      mountPath: /var/dhondhu/   

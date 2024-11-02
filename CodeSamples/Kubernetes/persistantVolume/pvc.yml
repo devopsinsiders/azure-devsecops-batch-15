@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vikram-pvc
+  namespace: default
+spec:
+  storageClassName: dhondhu 
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels: 
+      papa: dhondhu      
