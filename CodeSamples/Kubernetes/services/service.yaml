@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dhondhu-service
+  namespace: default
+spec: 
+  selector:
+    name: ghanshyam
+  ports:
+  - port: 6060
+    targetPort: 80

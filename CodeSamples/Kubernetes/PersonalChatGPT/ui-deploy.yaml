@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui-deployment
+  labels:
+    app: webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webui
+  template:
+    metadata:
+      labels:
+        app: webui
+    spec:
+      containers:
+      - name: webui
+        image: ghcr.io/open-webui/open-webui:main
+        env: 
+        - name: OLLAMA_BASE_URL
+          value: http://ollama-api-svc.default.svc.cluster.local
+        ports:
+        - containerPort: 8080
+

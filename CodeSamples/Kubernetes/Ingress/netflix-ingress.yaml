@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netflix-rule
+  labels:
+    name: netflix-rule
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - host: netflix.dhondhu.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: netflix
+            port: 
+              number: 80

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-api-deployment
+  labels:
+    app: ollama-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama-api
+  template:
+    tolerations:
+    - key: gpu
+      value: true
+      effect: NoScheule
+    metadata:
+      labels:
+        app: ollama-api
+    spec:
+      containers:
+      - name: ollama-api
+        image: ollama/ollama
+        ports:
+        - containerPort: 11434
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "ollama run llama3.2:1b"
+
+---

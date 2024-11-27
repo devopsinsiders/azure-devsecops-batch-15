@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todoui-ingress
+  labels:
+    name: todoui-ingress
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - host: todoui.dhondhu.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: todoui
+            port: 
+              number: 80
+

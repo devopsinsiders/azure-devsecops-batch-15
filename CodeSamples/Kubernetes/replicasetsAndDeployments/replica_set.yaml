@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: hunter-replicaset
+  namespace: default
+spec:
+  replicas: 0
+  selector: 
+    matchLabels:
+      ghanshyam: kala 
+  template: 
+    metadata:
+      name: dhondhu-pod
+      namespace: default  
+      labels:
+        ghanshyam: kala      
+    spec: 
+      containers:
+      - image: nginx:stable-perl
+        name: nginx-c
+        ports: 
+        - containerPort: 80
+
+

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boss-deployment
+  namespace: default
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      name: ghanshyam
+  template:
+    metadata: 
+      name: nginx-pod
+      namespace: default
+      labels: 
+        name: ghanshyam
+    spec: 
+      containers:
+      - image: nginx
+        name: nginx-container
+        ports: 
+        - containerPort: 80  
