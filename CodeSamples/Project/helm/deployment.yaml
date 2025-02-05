@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ parameter.name }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ${{ parameter.app }}
+  template:
+    metadata:
+      labels:
+        app: $ {{parameter.app }}
+    spec:
+      containers:
+      - name: $ {{ parameter.name }}
+        image: qatodoacrwestus5.azurecr.io/todoui:106
+        ports:
+        - containerPort: 80
